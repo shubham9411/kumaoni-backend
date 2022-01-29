@@ -3,18 +3,24 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/routes"
 )
 
 func main() {
 	fmt.Println("Welcome to Kumaoni API")
-	r := mux.NewRouter()
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 
 	routes.RegisterBookStoreRoutes(r)
 
-	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":3000", r))
+	err := r.Run(":3000")
+	if err != nil {
+		log.Fatal("Something went wrong:: ", err)
+	}
 }

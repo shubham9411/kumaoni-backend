@@ -1,72 +1,59 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
+	"log"
 	"strconv"
 
-	"github.com/gorilla/mux"
-	"github.com/shubham9411/kumaoni-backend/pkg/models"
-	"github.com/shubham9411/kumaoni-backend/pkg/utils"
+	"github.com/gin-gonic/gin"
+	"github.com/shubham9411/kumaoni-backend/models"
 )
 
 var NewBook models.Book
 
-func GetBook(w http.ResponseWriter, r *http.Request) {
+func GetBook(c *gin.Context) {
 	newBooks := models.GetAllBooks()
-	res, _ := json.Marshal(newBooks)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+	c.JSON(200, newBooks)
 }
 
-func GetBookById(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	bookId := vars["bookId"]
+func GetBookById(c *gin.Context) {
+	bookId := c.Param("bookId")
 	ID, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println("Error while parsing")
 	}
 
 	book, _ := models.GetBookById(ID)
-	res, _ := json.Marshal(book)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+	c.JSON(200, book)
 }
 
-func CreateBook(w http.ResponseWriter, r *http.Request) {
+func CreateBook(c *gin.Context) {
 	CreateBook := &models.Book{}
-	utils.ParseBody(r, CreateBook)
-	b := CreateBook.CreateBook()
+	if err := c.BindJSON(&CreateBook); err != nil {
+		log.Fatal("CreateBook:: Error in parsing", err)
+	}
+	book := CreateBook.CreateBook()
 
-	res, _ := json.Marshal(b)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+	c.JSON(200, book)
 }
 
-func DeleteBook(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	bookId := vars["bookId"]
+func DeleteBook(c *gin.Context) {
+	bookId := c.Param("bookId")
 	ID, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println("Error while parsing")
 	}
 
 	book := models.DeleteBook(ID)
-	res, _ := json.Marshal(book)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+	c.JSON(200, book)
 }
 
-func UpdateBook(w http.ResponseWriter, r *http.Request) {
+func UpdateBook(c *gin.Context) {
 	var updateBook = &models.Book{}
-	utils.ParseBody(r, updateBook)
-	vars := mux.Vars(r)
-	bookId := vars["bookId"]
+	if err := c.BindJSON(&updateBook); err != nil {
+		log.Fatal("UpdateBook:: Error in parsing", err)
+	}
+	bookId := c.Param("bookId")
 	Id, err := strconv.ParseInt(bookId, 0, 0)
 	if err != nil {
 		fmt.Println("Error is parsing id")
@@ -84,9 +71,6 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db.Save(&bookDetails)
-	res, _ := json.Marshal(bookDetails)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+	c.JSON(200, bookDetails)
 }
