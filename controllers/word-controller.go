@@ -1,59 +1,81 @@
 package controllers
 
 import (
-	"fmt"
-	"log"
-	"strconv"
-
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/models"
+	"github.com/shubham9411/kumaoni-backend/utils"
 )
 
 var NewWord models.Word
 
 func GetAllWords(c *gin.Context) {
-	newWords := models.GetAllWords()
+	newWords, err := models.GetAllWords()
+	if err != nil {
+		utils.SendError(err.Error(), c)
+		return
+	}
+	c.JSON(200, newWords)
+}
+
+func GetAllWordsByCategory(c *gin.Context) {
+	categoryId := c.Param("categoryId")
+	newWords, err := models.GetAllWordsByCategory(categoryId)
+	if err != nil {
+		utils.SendError(err.Error(), c)
+		return
+	}
 	c.JSON(200, newWords)
 }
 
 func GetWordById(c *gin.Context) {
 	wordId := c.Param("wordId")
-	ID, err := strconv.ParseInt(wordId, 0, 0)
-	if err != nil {
-		fmt.Println("Error while parsing")
-	}
 
-	word, _ := models.GetWordById(ID)
+	word, _, err := models.GetWordById(wordId)
+	if err != nil {
+		utils.SendError(err.Error(), c)
+		return
+	}
 	c.JSON(200, word)
 }
 
 func CreateWord(c *gin.Context) {
 	CreateWord := &models.Word{}
 	if err := c.BindJSON(&CreateWord); err != nil {
-		log.Fatal("CreateWord:: Error in parsing", err)
+		utils.SendError("Error in parsing", c)
+		return
 	}
-	word := CreateWord.CreateWord()
+	word, err := CreateWord.CreateWord()
+	if err != nil {
+		utils.SendError(err.Error(), c)
+		return
+	}
 
 	c.JSON(200, word)
 }
 
 func DeleteWord(c *gin.Context) {
 	wordId := c.Param("wordId")
-	ID, err := strconv.ParseInt(wordId, 0, 0)
+	word, err := models.DeleteWord(wordId)
 	if err != nil {
-		fmt.Println("Error while parsing")
+		utils.SendError(err.Error(), c)
+		return
 	}
 
-	word := models.DeleteWord(ID)
 	c.JSON(200, word)
 }
 
 func UpdateWord(c *gin.Context) {
 	var updateWord = &models.Word{}
 	if err := c.BindJSON(&updateWord); err != nil {
-		log.Fatal("UpdateWord:: Error in parsing", err)
+		utils.SendError("Error in parsing", c)
+		return
 	}
-	wordDetails := models.UpdateWord(updateWord)
+	updateWord.ID = c.Param("wordId")
+	wordDetails, err := models.UpdateWord(updateWord)
+	if err != nil {
+		utils.SendError(err.Error(), c)
+		return
+	}
 
 	c.JSON(200, wordDetails)
 }
