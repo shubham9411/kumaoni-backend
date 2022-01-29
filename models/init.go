@@ -16,13 +16,85 @@ func SetDatabase(db *gorm.DB) {
 		&Word{},
 		&Category{},
 	)
-	DB.Create(Category{Name: "Day and Time", HindiName: "दिन एवं समय", Icon: "61494", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Frequent", HindiName: "नियमित", Icon: "61560", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Preposition", HindiName: "पूर्वसर्ग", Icon: "59698", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Relation", HindiName: "रिश्ते", Icon: "61546", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Months", HindiName: "महीने", Icon: "58915", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Kumaoni Food", HindiName: "कुमाऊँनी खाना", Icon: "59237", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Misc", HindiName: "विविध", Icon: "59698", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: "e2c450eb-b26c-49d4-8945-6d30e54dd2a6"})
-	DB.Create(Category{Name: "Fruits", HindiName: "फल", Icon: "59237", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
-	DB.Create(Category{Name: "Animals and Birds", HindiName: "जानवर एवं पक्षी", Icon: "60989", CreatedAt: time.Now().Local(), UpdatedAt: time.Now().Local(), ID: uuid.New().String()})
+	var defaultId string = "e2c450eb-b26c-49d4-8945-6d30e54dd2a6"
+	var defaultCategory Category
+	dbt := DB.Where("ID = ?", defaultId).Find(&defaultCategory)
+	if dbt.RowsAffected == 0 {
+		defaultCategories(defaultId)
+	}
+}
+
+func defaultCategories(defaultId string) {
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Day and Time",
+		HindiName: "दिन एवं समय",
+		Icon:      "61494",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Frequent",
+		HindiName: "नियमित",
+		Icon:      "61560",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Preposition",
+		HindiName: "पूर्वसर्ग",
+		Icon:      "59698",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Relation",
+		HindiName: "रिश्ते",
+		Icon:      "61546",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Months",
+		HindiName: "महीने",
+		Icon:      "58915",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Kumaoni Food",
+		HindiName: "कुमाऊँनी खाना",
+		Icon:      "59237",
+	})
+	DB.Create(Category{
+		ID:        defaultId,
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Misc",
+		HindiName: "विविध",
+		Icon:      "59698",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Fruits",
+		HindiName: "फल",
+		Icon:      "59237",
+	})
+	DB.Create(Category{
+		ID:        uuid.New().String(),
+		CreatedAt: time.Now().Local(),
+		UpdatedAt: time.Now().Local(),
+		Name:      "Animals and Birds",
+		HindiName: "जानवर एवं पक्षी",
+		Icon:      "60989",
+	})
 }
