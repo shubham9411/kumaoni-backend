@@ -15,6 +15,7 @@ func SetDatabase(db *gorm.DB) {
 	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		&Word{},
 		&Category{},
+		&Phrase{},
 	)
 	var defaultId string = "e2c450eb-b26c-49d4-8945-6d30e54dd2a6"
 	var defaultCategory Category
