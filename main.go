@@ -25,6 +25,7 @@ func main() {
 	})
 
 	routes.RegisterWordStoreRoutes(r)
+	routes.RegisterCategoryStoreRoutes(r)
 
 	port := utils.GodotEnv("GO_PORT")
 

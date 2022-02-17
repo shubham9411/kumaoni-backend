@@ -29,3 +29,12 @@ func (entity *Category) BeforeUpdate(db *gorm.DB) error {
 	entity.UpdatedAt = time.Now().Local()
 	return nil
 }
+
+func GetAllCategories() ([]Category, error) {
+	var Categories []Category
+	dbe := DB.Find(&Categories)
+	if dbe.Error != nil {
+		return nil, dbe.Error
+	}
+	return Categories, nil
+}
