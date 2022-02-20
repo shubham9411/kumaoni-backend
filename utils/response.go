@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +20,6 @@ type Responses struct {
 }
 
 func SendError(e string, c *gin.Context) {
-	fmt.Println(e)
 	err := ErrorResponse{StatusCode: http.StatusUnprocessableEntity, Error: e}
 	c.JSON(http.StatusUnprocessableEntity, err)
 }

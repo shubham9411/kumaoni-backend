@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/models"
 	"github.com/shubham9411/kumaoni-backend/utils"
@@ -14,7 +16,7 @@ func GetAllPhrases(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newPhrases)
+	c.JSON(http.StatusOK, newPhrases)
 }
 
 func GetAllPhrasesByCategory(c *gin.Context) {
@@ -24,7 +26,7 @@ func GetAllPhrasesByCategory(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newPhrases)
+	c.JSON(http.StatusOK, newPhrases)
 }
 
 func GetPhraseById(c *gin.Context) {
@@ -35,13 +37,13 @@ func GetPhraseById(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, phrase)
+	c.JSON(http.StatusOK, phrase)
 }
 
 func CreatePhrase(c *gin.Context) {
 	CreatePhrase := &models.Phrase{}
 	if err := c.BindJSON(&CreatePhrase); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	phrase, err := CreatePhrase.CreatePhrase()
@@ -50,7 +52,7 @@ func CreatePhrase(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, phrase)
+	c.JSON(http.StatusOK, phrase)
 }
 
 func DeletePhrase(c *gin.Context) {
@@ -61,13 +63,13 @@ func DeletePhrase(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, phrase)
+	c.JSON(http.StatusOK, phrase)
 }
 
 func UpdatePhrase(c *gin.Context) {
 	var updatePhrase = &models.Phrase{}
 	if err := c.BindJSON(&updatePhrase); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	updatePhrase.ID = c.Param("phraseId")
@@ -77,5 +79,5 @@ func UpdatePhrase(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, phraseDetails)
+	c.JSON(http.StatusOK, phraseDetails)
 }

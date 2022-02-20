@@ -5,6 +5,6 @@ import (
 	"github.com/shubham9411/kumaoni-backend/controllers"
 )
 
-var RegisterCategoryStoreRoutes = func(router *gin.Engine) {
+var RegisterCategoryStoreRoutes = func(router *gin.Engine, authGroup *gin.RouterGroup) {
 	router.GET("/categories", controllers.GetAllCategories)
 }

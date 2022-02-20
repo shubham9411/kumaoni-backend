@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/models"
 	"github.com/shubham9411/kumaoni-backend/utils"
@@ -14,7 +16,7 @@ func GetAllWords(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newWords)
+	c.JSON(http.StatusOK, newWords)
 }
 
 func GetAllWordsByCategory(c *gin.Context) {
@@ -24,7 +26,7 @@ func GetAllWordsByCategory(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newWords)
+	c.JSON(http.StatusOK, newWords)
 }
 
 func GetWordById(c *gin.Context) {
@@ -35,13 +37,13 @@ func GetWordById(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, word)
+	c.JSON(http.StatusOK, word)
 }
 
 func CreateWord(c *gin.Context) {
 	CreateWord := &models.Word{}
 	if err := c.BindJSON(&CreateWord); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	word, err := CreateWord.CreateWord()
@@ -50,7 +52,7 @@ func CreateWord(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, word)
+	c.JSON(http.StatusOK, word)
 }
 
 func DeleteWord(c *gin.Context) {
@@ -61,13 +63,13 @@ func DeleteWord(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, word)
+	c.JSON(http.StatusOK, word)
 }
 
 func UpdateWord(c *gin.Context) {
 	var updateWord = &models.Word{}
 	if err := c.BindJSON(&updateWord); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	updateWord.ID = c.Param("wordId")
@@ -77,5 +79,5 @@ func UpdateWord(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, wordDetails)
+	c.JSON(http.StatusOK, wordDetails)
 }

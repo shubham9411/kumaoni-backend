@@ -3,11 +3,13 @@ package models
 import (
 	"time"
 
+	"github.com/go-playground/validator"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 )
 
 var DB *gorm.DB
+var validate *validator.Validate
 
 func SetDatabase(db *gorm.DB) {
 	DB = db
@@ -16,10 +18,12 @@ func SetDatabase(db *gorm.DB) {
 		&Word{},
 		&Category{},
 		&Phrase{},
+		&User{},
 	)
 	var defaultId string = "e2c450eb-b26c-49d4-8945-6d30e54dd2a6"
 	var defaultCategory Category
 	dbt := DB.Where("ID = ?", defaultId).Find(&defaultCategory)
+	validate = validator.New()
 	if dbt.RowsAffected == 0 {
 		defaultCategories(defaultId)
 	}
