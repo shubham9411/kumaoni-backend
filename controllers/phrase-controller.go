@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/models"
 	"github.com/shubham9411/kumaoni-backend/utils"
@@ -14,7 +16,7 @@ func GetAllPhrases(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newPhrases)
+	c.JSON(http.StatusOK, newPhrases)
 }
 
 func GetAllPhrasesByCategory(c *gin.Context) {
@@ -24,7 +26,7 @@ func GetAllPhrasesByCategory(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newPhrases)
+	c.JSON(http.StatusOK, newPhrases)
 }
 
 func GetPhraseById(c *gin.Context) {
@@ -35,7 +37,7 @@ func GetPhraseById(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, phrase)
+	c.JSON(http.StatusOK, phrase)
 }
 
 func CreatePhrase(c *gin.Context) {
@@ -50,7 +52,7 @@ func CreatePhrase(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, phrase)
+	c.JSON(http.StatusOK, phrase)
 }
 
 func DeletePhrase(c *gin.Context) {
@@ -61,7 +63,7 @@ func DeletePhrase(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, phrase)
+	c.JSON(http.StatusOK, phrase)
 }
 
 func UpdatePhrase(c *gin.Context) {
@@ -77,5 +79,5 @@ func UpdatePhrase(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, phraseDetails)
+	c.JSON(http.StatusOK, phraseDetails)
 }

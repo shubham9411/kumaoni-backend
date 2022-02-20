@@ -16,6 +16,7 @@ func SetDatabase(db *gorm.DB) {
 		&Word{},
 		&Category{},
 		&Phrase{},
+		&User{},
 	)
 	var defaultId string = "e2c450eb-b26c-49d4-8945-6d30e54dd2a6"
 	var defaultCategory Category

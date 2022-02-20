@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/models"
 	"github.com/shubham9411/kumaoni-backend/utils"
@@ -14,7 +16,7 @@ func GetAllWords(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newWords)
+	c.JSON(http.StatusOK, newWords)
 }
 
 func GetAllWordsByCategory(c *gin.Context) {
@@ -24,7 +26,7 @@ func GetAllWordsByCategory(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, newWords)
+	c.JSON(http.StatusOK, newWords)
 }
 
 func GetWordById(c *gin.Context) {
@@ -35,7 +37,7 @@ func GetWordById(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, word)
+	c.JSON(http.StatusOK, word)
 }
 
 func CreateWord(c *gin.Context) {
@@ -50,7 +52,7 @@ func CreateWord(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, word)
+	c.JSON(http.StatusOK, word)
 }
 
 func DeleteWord(c *gin.Context) {
@@ -61,7 +63,7 @@ func DeleteWord(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, word)
+	c.JSON(http.StatusOK, word)
 }
 
 func UpdateWord(c *gin.Context) {
@@ -77,5 +79,5 @@ func UpdateWord(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, wordDetails)
+	c.JSON(http.StatusOK, wordDetails)
 }

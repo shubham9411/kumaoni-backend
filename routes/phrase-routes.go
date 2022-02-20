@@ -5,11 +5,11 @@ import (
 	"github.com/shubham9411/kumaoni-backend/controllers"
 )
 
-var RegisterPhraseStoreRoutes = func(router *gin.Engine) {
-	router.POST("/phrase", controllers.CreatePhrase)
+var RegisterPhraseStoreRoutes = func(router *gin.Engine, authGroup *gin.RouterGroup) {
 	router.GET("/phrases", controllers.GetAllPhrases)
 	router.GET("/phrases/:categoryId", controllers.GetAllPhrasesByCategory)
 	router.GET("/phrase/:phraseId", controllers.GetPhraseById)
-	router.PUT("/phrase/:phraseId", controllers.UpdatePhrase)
-	router.DELETE("/phrase/:phraseId", controllers.DeletePhrase)
+	authGroup.POST("/phrase", controllers.CreatePhrase)
+	authGroup.PUT("/phrase/:phraseId", controllers.UpdatePhrase)
+	authGroup.DELETE("/phrase/:phraseId", controllers.DeletePhrase)
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/config"
@@ -19,14 +20,12 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
-	routes.RegisterWordStoreRoutes(r)
-	routes.RegisterCategoryStoreRoutes(r)
-	routes.RegisterPhraseStoreRoutes(r)
+	routes.InitializeRoutes(r)
 
 	port := utils.GodotEnv("GO_PORT")
 

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shubham9411/kumaoni-backend/models"
 	"github.com/shubham9411/kumaoni-backend/utils"
@@ -12,5 +14,5 @@ func GetAllCategories(c *gin.Context) {
 		utils.SendError(err.Error(), c)
 		return
 	}
-	c.JSON(200, categories)
+	c.JSON(http.StatusOK, categories)
 }
