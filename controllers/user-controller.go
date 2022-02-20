@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,14 +10,6 @@ import (
 )
 
 var Users models.User
-
-func HashPassword(password string) string {
-	pass, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	if err != nil {
-		log.Panic(err)
-	}
-	return string(pass)
-}
 
 func VerifyPassword(userPassword string, providedPassword string) (bool, string) {
 	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
@@ -35,11 +26,10 @@ func VerifyPassword(userPassword string, providedPassword string) (bool, string)
 func Signup(c *gin.Context) {
 	user := &models.User{}
 	if err := c.BindJSON(&user); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
-	password := HashPassword(user.Password)
-	user.Password = password
+
 	user, err := user.CreateUser()
 	if err != nil {
 		utils.SendError(err.Error(), c)
@@ -63,7 +53,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	isValidPassword, msg := VerifyPassword(user.Password, foundUser.Password)
+	isValidPassword, msg := VerifyPassword(user.Password, foundUser.HashedPassword)
 
 	if !isValidPassword {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": msg})

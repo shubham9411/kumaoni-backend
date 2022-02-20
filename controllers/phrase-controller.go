@@ -43,7 +43,7 @@ func GetPhraseById(c *gin.Context) {
 func CreatePhrase(c *gin.Context) {
 	CreatePhrase := &models.Phrase{}
 	if err := c.BindJSON(&CreatePhrase); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	phrase, err := CreatePhrase.CreatePhrase()
@@ -69,7 +69,7 @@ func DeletePhrase(c *gin.Context) {
 func UpdatePhrase(c *gin.Context) {
 	var updatePhrase = &models.Phrase{}
 	if err := c.BindJSON(&updatePhrase); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	updatePhrase.ID = c.Param("phraseId")

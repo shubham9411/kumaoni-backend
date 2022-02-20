@@ -7,22 +7,24 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/shubham9411/kumaoni-backend/utils"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID        string     `gorm:"primary_key"`
+	ID        string     `validate:"required" gorm:"primary_key"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `sql:"index"`
 
-	FirstName    string `gorm:"not null" json:"first_name"`
-	LastName     string `gorm:"not null" json:"last_name"`
-	Password     string `gorm:"not null" json:"password"`
-	Email        string `gorm:"unique;not null" json:"email"`
-	Phone        string `json:"phone"`
-	Token        string `gorm:"size:1000" json:"token"`
-	RefreshToken string `gorm:"size:1000" json:"refresh_token"`
-	UserType     string `json:"user_type" validate:"required, eq=ADMIN|eq=USER"`
+	FirstName      string `validate:"required" gorm:"not null" json:"first_name"`
+	LastName       string `validate:"required" gorm:"not null" json:"last_name"`
+	HashedPassword string `gorm:"not null" json:"-"`
+	Password       string `validate:"required,gte=8" gorm:"-" json:"password"`
+	Email          string `validate:"required,email" gorm:"unique;not null" json:"email"`
+	Phone          string `validate:"required,gte=10,lte=12" json:"phone"`
+	Token          string `validate:"required" gorm:"size:1000" json:"token"`
+	RefreshToken   string `validate:"required" gorm:"size:1000" json:"refresh_token"`
+	UserType       string `validate:"required,oneof=USER ADMIN" json:"user_type"`
 }
 
 func (entity *User) BeforeCreate(db *gorm.DB) error {
@@ -35,16 +37,34 @@ func (entity *User) BeforeUpdate(db *gorm.DB) error {
 	return nil
 }
 
+func HashPassword(password string) string {
+	pass, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		log.Panic(err)
+	}
+	return string(pass)
+}
+
 func (user *User) CreateUser() (*User, error) {
 	DB.NewRecord(user)
 	user.ID = uuid.New().String()
+	user.UserType = "USER"
 	token, refreshToken, _ := utils.GenerateAllTokens(user.Email, user.FirstName, user.LastName, user.UserType, user.ID)
 	user.Token = token
 	user.RefreshToken = refreshToken
 
+	err := validate.Struct(user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	password := HashPassword(user.Password)
+	user.HashedPassword = password
 	if dbe := DB.Create(&user); dbe.Error != nil {
 		return nil, dbe.Error
 	}
+	user.Password = ""
 	return user, nil
 }
 

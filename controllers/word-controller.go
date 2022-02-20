@@ -43,7 +43,7 @@ func GetWordById(c *gin.Context) {
 func CreateWord(c *gin.Context) {
 	CreateWord := &models.Word{}
 	if err := c.BindJSON(&CreateWord); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	word, err := CreateWord.CreateWord()
@@ -69,7 +69,7 @@ func DeleteWord(c *gin.Context) {
 func UpdateWord(c *gin.Context) {
 	var updateWord = &models.Word{}
 	if err := c.BindJSON(&updateWord); err != nil {
-		utils.SendError("Error in parsing", c)
+		utils.SendError(err.Error(), c)
 		return
 	}
 	updateWord.ID = c.Param("wordId")
