@@ -41,5 +41,24 @@ services:
       DB_NAME: gotest
       DB_HOST: db
       GIN_MODE: release
+  webserver:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./nginx/certbot/:/etc/letsencrypt/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+    ports:
+      - 80:80
+      - 443:443
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/dns-cloudflare:latest
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./cloudflare.ini:/var/www/certbot/cloudflare.ini:rw
 volumes:
   my-db:
