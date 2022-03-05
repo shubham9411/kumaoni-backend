@@ -1,0 +1,45 @@
+version: '3.3'
+services:
+  db:
+    platform: linux/x86_64
+    image: mysql:8.0
+    restart: always
+    container_name: db
+    environment:
+      MYSQL_DATABASE: gotest
+      MYSQL_USER: gouser
+      MYSQL_PASSWORD: gouser123
+      MYSQL_ROOT_PASSWORD: gouser123
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+  web:
+    build: .
+    container_name: web
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '3000:3000'
+    expose:
+      - '3000'
+    links:
+      - "db"
+    environment:
+      GO_ENV: production
+      GO_PORT: 3000
+      DB_USER: gouser
+      DB_PASSWORD: gouser123
+      DB_NAME: gotest
+      DB_HOST: db
+      GIN_MODE: release
+volumes:
+  my-db:
