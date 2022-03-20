@@ -5,6 +5,8 @@ services:
     image: mysql:8.0
     restart: always
     container_name: db
+    cap_add:
+      - SYS_NICE
     environment:
       MYSQL_DATABASE: gotest
       MYSQL_USER: gouser
