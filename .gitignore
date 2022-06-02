@@ -16,5 +16,5 @@
 kumaoni-backend
 .env
 main
-certbot
+/certbot
 cloudflare.ini
